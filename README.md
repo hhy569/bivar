@@ -113,6 +113,45 @@ This benchmark demonstrates that BIVAR can handle different types of security pa
 
 ---
 
+## Example Output: LIEF CVE-2025-15504 Benchmark
+
+### Input
+- Old binary: `vulnerable.o` (before fix)
+- New binary: `patched.o` (after fix)
+
+### Results
+```
+Old binary: 5 functions
+New binary: 5 functions
+Unchanged: 4
+Modified: 1
+
+Modified function:
+  ELFParser::parse_binary()
+    Old instructions: 31
+    New instructions: 35
+    Added instructions: 7
+    Removed instructions: 3
+```
+
+**Interpretation**: BIVAR correctly identified that `parse_binary()` was modified. The patch adds a null pointer check before dereferencing the segment pointer, which matches CVE-2025-15504 (NULL pointer dereference in ELF parser).
+
+**Security semantic detected**: NULL CHECK
+
+---
+
+## Three-CVE Benchmark Summary
+
+| Benchmark | CVE / Bug Type | Security Semantic | Function Localized |
+|-----------|----------------|-------------------|--------------------|
+| PcapPlusPlus NTP | Truncated header OOB | LENGTH CHECK | ✅ `getNtpHeader()` |
+| Poppler | CVE-2024-56378 | INTEGER OVERFLOW CHECK | ✅ `JBIG2Bitmap::combine()` |
+| LIEF | CVE-2025-15504 | NULL CHECK | ✅ `ELFParser::parse_binary()` |
+
+This three-benchmark matrix demonstrates that BIVAR can generalize across different memory-safety bug classes, not just one specific pattern.
+
+---
+
 ## Project Structure
 
 ```
@@ -127,9 +166,12 @@ bivar/
 │   ├── ntp-patch-test/
 │   │   ├── old-vulnerable.o   # PcapPlusPlus v26.07 NTP layer
 │   │   └── new-patched.o      # Patched version with length check
-│   └── poppler-cve-2024-56378/
-│       ├── vulnerable.o       # Poppler JBIG2Bitmap::combine before fix
-│       └── patched.o          # After fix (added checkedAdd integer guard)
+│   ├── poppler-cve-2024-56378/
+│   │   ├── vulnerable.o       # Poppler JBIG2Bitmap::combine before fix
+│   │   └── patched.o          # After fix (added checkedAdd integer guard)
+│   └── lief-cve-2025-15504/
+│       ├── vulnerable.o       # LIEF ELF parser before fix
+│       └── patched.o          # After fix (added null pointer check)
 └── README.md
 ```
 
