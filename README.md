@@ -13,7 +13,7 @@ This is the binary-level counterpart to [SVTA (Source Variant Analysis)](https:/
 
 ---
 
-## Current Capabilities (v0.3)
+## Current Capabilities (v0.4)
 
 ### ✅ Implemented
 - **Function Extraction**: Disassembles ELF binaries and extracts all functions
@@ -80,6 +80,39 @@ Modified function:
 
 ---
 
+## Example Output: Poppler CVE-2024-56378 Benchmark
+
+### Input
+- Old binary: `vulnerable.o` (before fix)
+- New binary: `patched.o` (after fix)
+
+### Results
+```
+Old binary: 4 functions
+New binary: 5 functions
+Unchanged: 3
+Modified: 1
+Added: 1
+
+Modified function:
+  JBIG2Bitmap::combine(JBIG2Bitmap*, int, int, unsigned int)
+    Old instructions: 200
+    New instructions: 286
+    Added instructions: 146
+    Removed instructions: 60
+
+Added function:
+  checkedAdd() (integer overflow guard)
+```
+
+**Interpretation**: BIVAR correctly identified that `JBIG2Bitmap::combine()` was modified, and that a new helper function `checkedAdd()` was added. This matches the actual CVE-2024-56378 fix, which added integer overflow checking before computing `y + yy`.
+
+**Security semantic detected**: INTEGER OVERFLOW CHECK
+
+This benchmark demonstrates that BIVAR can handle different types of security patches beyond simple length checks.
+
+---
+
 ## Project Structure
 
 ```
@@ -91,9 +124,12 @@ bivar/
 │   ├── patch_completeness.py  # Patch completeness analysis
 │   └── bivar.py               # Main entry point
 ├── benchmarks/
-│   └── ntp-patch-test/
-│       ├── old-vulnerable.o   # PcapPlusPlus v26.07 NTP layer
-│       └── new-patched.o      # Patched version with length check
+│   ├── ntp-patch-test/
+│   │   ├── old-vulnerable.o   # PcapPlusPlus v26.07 NTP layer
+│   │   └── new-patched.o      # Patched version with length check
+│   └── poppler-cve-2024-56378/
+│       ├── vulnerable.o       # Poppler JBIG2Bitmap::combine before fix
+│       └── patched.o          # After fix (added checkedAdd integer guard)
 └── README.md
 ```
 
