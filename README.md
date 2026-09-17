@@ -13,7 +13,7 @@ This is the binary-level counterpart to [SVTA (Source Variant Analysis)](https:/
 
 ---
 
-## Current Capabilities (v0.4)
+## Current Capabilities (v0.5)
 
 ### ✅ Implemented
 - **Function Extraction**: Disassembles ELF binaries and extracts all functions
@@ -22,6 +22,7 @@ This is the binary-level counterpart to [SVTA (Source Variant Analysis)](https:/
 - **Guard Pattern Detection**: Identifies CMP + conditional branch pairs
 - **Security Semantic Classification**: Classifies security check types (length check / bounds check / null check)
 - **Patch Completeness Analysis**: Automatically checks whether a security patch fully covers all consumer functions
+- **Variant Hunter**: Searches for similar unpatched variants after identifying a security patch
 
 ### 🔄 In Progress
 - Basic-block-level diffing
@@ -161,6 +162,7 @@ bivar/
 │   ├── diff_engine.py         # Instruction-level diffing
 │   ├── security_semantic.py   # Security check classification
 │   ├── patch_completeness.py  # Patch completeness analysis
+│   ├── variant_hunter.py      # Variant discovery engine
 │   └── bivar.py               # Main entry point
 ├── benchmarks/
 │   ├── ntp-patch-test/
