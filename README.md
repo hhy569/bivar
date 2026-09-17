@@ -21,6 +21,7 @@ This is the binary-level counterpart to [SVTA (Source Variant Analysis)](https:/
 - **Instruction Diff**: Performs instruction-level comparison of modified functions
 - **Guard Pattern Detection**: Identifies CMP + conditional branch pairs
 - **Security Semantic Classification**: Classifies security check types (length check / bounds check / null check)
+- **Patch Completeness Analysis**: Automatically checks whether a security patch fully covers all consumer functions
 
 ### 🔄 In Progress
 - Basic-block-level diffing
@@ -87,6 +88,7 @@ bivar/
 │   ├── function_matcher.py    # Function extraction & matching
 │   ├── diff_engine.py         # Instruction-level diffing
 │   ├── security_semantic.py   # Security check classification
+│   ├── patch_completeness.py  # Patch completeness analysis
 │   └── bivar.py               # Main entry point
 ├── benchmarks/
 │   └── ntp-patch-test/
